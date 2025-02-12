@@ -91,7 +91,7 @@ public class UserService {
      * 🔹 로그인 처리 및 토큰 발급
      */
     public UserInfoWithToken login(LoginDto loginDto) {
-        User user = userRepository.findByUsername(loginDto.getUsername())
+        User user = userRepository.findByUsernameAndDeleted(loginDto.getUsername(), 0)
                 .orElseThrow(() -> new NotFoundException("사용자를 찾을 수 없습니다."));
 
         if (!passwordEncoder.matches(loginDto.getPassword(), user.getPassword())) {
