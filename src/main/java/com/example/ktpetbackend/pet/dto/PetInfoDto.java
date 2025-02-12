@@ -7,11 +7,13 @@ import lombok.*;
 @AllArgsConstructor
 @Getter
 @Setter
-public class PetRegisterDto {
+public class PetInfoDto {
 
     private String name;
 
     private String petType;
 
     private Long age;
+
+    private String url;
 }
