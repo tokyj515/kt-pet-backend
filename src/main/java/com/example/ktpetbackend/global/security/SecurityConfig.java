@@ -52,9 +52,9 @@ public class SecurityConfig {
                         // Swagger UI 허용
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html").permitAll()
                         .requestMatchers("/h2-console/**").permitAll()
-                        .requestMatchers("/signup/**", "/login", "/thread").permitAll()
-                        .requestMatchers("/now/user").hasRole("USER")
-                        .requestMatchers("/now/admin").hasRole("ADMIN")
+                        .requestMatchers("/user/signup/**", "/user/login", "/thread").permitAll()
+                        .requestMatchers("/user/profile").hasRole("USER")
+//                        .requestMatchers("/now/admin").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))

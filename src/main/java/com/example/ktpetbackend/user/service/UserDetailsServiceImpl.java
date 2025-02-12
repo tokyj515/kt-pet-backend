@@ -43,6 +43,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         List<String> userRole = new ArrayList<>();
         userRole.add(user.getUserRole());
         return RoleDto.builder()
+                .username(user.getUsername())
                 .id(user.getId())
                 .password(user.getPassword())
                 .roles(userRole)

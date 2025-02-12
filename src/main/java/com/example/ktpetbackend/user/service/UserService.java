@@ -2,6 +2,7 @@ package com.example.ktpetbackend.user.service;
 
 import com.example.ktpetbackend.user.dto.LoginDto;
 import com.example.ktpetbackend.user.dto.SignUpDto;
+import com.example.ktpetbackend.user.dto.UserInfo;
 import com.example.ktpetbackend.user.dto.UserInfoWithToken;
 import com.example.ktpetbackend.user.entity.RefreshToken;
 import com.example.ktpetbackend.user.entity.User;
@@ -63,6 +64,7 @@ public class UserService {
                 .password(encodedPassword)
                 .name(signUpDto.getName())
                 .userRole("ROLE_USER")
+                .email(signUpDto.getEmail())
                 .build();
 
         userRepository.save(user);
@@ -112,9 +114,21 @@ public class UserService {
     /**
      * 🔹 현재 로그인한 사용자 정보 조회
      */
-    public User findNowLoginUser() {
-        return SecurityUtil.getCurrentUsername()
-                .flatMap(userRepository::findByUsername)
-                .orElseThrow(() -> new NotFoundException("현재 로그인한 사용자를 찾을 수 없습니다."));
+//    public User findNowLoginUser() {
+//        return SecurityUtil.getCurrentUsername()
+//                .flatMap(userRepository::findByUsername)
+//                .orElseThrow(() -> new NotFoundException("현재 로그인한 사용자를 찾을 수 없습니다."));
+//    }
+
+    public UserInfo getProfile(String username) {
+        User user = userRepository.findByUsername(username).get();
+
+        UserInfo userInfo = UserInfo.builder()
+                .username(user.getUsername())
+                .id(user.getId())
+                .email(user.getEmail())
+                .build();
+
+        return userInfo;
     }
 }

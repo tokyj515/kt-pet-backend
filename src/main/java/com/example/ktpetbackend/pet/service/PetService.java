@@ -13,11 +13,11 @@ public class PetService {
     private final UserRepository userRepository;
     private final PetRepository petRepository;
 
-
-    public String registerPet(Long userId) {
-        User user = userRepository.findById(userId).get();
-
-
-
-    }
+//
+//    public String registerPet(Long userId) {
+//        User user = userRepository.findById(userId).get();
+//
+//
+//
+//    }
 }

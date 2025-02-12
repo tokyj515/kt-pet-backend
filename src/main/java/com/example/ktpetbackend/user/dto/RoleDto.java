@@ -8,6 +8,7 @@ import java.util.List;
 @Data
 @Builder
 public class RoleDto {
+    private String username;
     private Long id;
     private String password;
     private List<String> roles;
