@@ -16,15 +16,15 @@ public class ControllerAdvice {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler({BadRequestException.class})
     public ResponseEntity<ApiResponse<String>> handleBadRequestException(BadRequestException e) {
-        ApiResponse<String> httpRes = new ApiResponse<>( e.getMessage());
-        return new ResponseEntity<>(httpRes, HttpStatus.BAD_REQUEST);
+        ApiResponse<String> httpRes = new ApiResponse<>(HttpStatus.BAD_REQUEST.value(), e.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(httpRes);
     }
 
 //    401
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     @ExceptionHandler({UnauthorizedException.class})
     public ResponseEntity<ApiResponse<String>> handleUnauthorizedException(UnauthorizedException e) {
-        ApiResponse<String> httpRes = new ApiResponse<>( e.getMessage());
+        ApiResponse<String> httpRes = new ApiResponse<>( HttpStatus.UNAUTHORIZED.value(), e.getMessage());
         return new ResponseEntity<>(httpRes, HttpStatus.UNAUTHORIZED);
     }
 
@@ -32,7 +32,7 @@ public class ControllerAdvice {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler({ServerErrorException.class})
     public ResponseEntity<ApiResponse<String>> handleServerErrorException(ServerErrorException e) {
-        ApiResponse<String> httpRes = new ApiResponse<>( e.getMessage());
+        ApiResponse<String> httpRes = new ApiResponse<>( HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
         return new ResponseEntity<>(httpRes, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
@@ -40,7 +40,7 @@ public class ControllerAdvice {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler({NotFoundException.class})
     public ResponseEntity<ApiResponse<String>> handleNotFoundException(NotFoundException e) {
-        ApiResponse<String> httpRes = new ApiResponse<>( e.getMessage());
+        ApiResponse<String> httpRes = new ApiResponse<>(HttpStatus.NOT_FOUND.value(), e.getMessage());
         return new ResponseEntity<>(httpRes, HttpStatus.NOT_FOUND);
     }
   
@@ -48,7 +48,7 @@ public class ControllerAdvice {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler({MultipartException.class})
     public ResponseEntity<ApiResponse<String>> handleMultipartException(MultipartException e) {
-        ApiResponse<String> httpRes = new ApiResponse<>( "잘못된 형식의 파일입니다.");
+        ApiResponse<String> httpRes = new ApiResponse<>( HttpStatus.BAD_REQUEST.value(), "잘못된 형식의 파일입니다.");
         return new ResponseEntity<>(httpRes, HttpStatus.BAD_REQUEST);
     }
 }

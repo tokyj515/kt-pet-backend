@@ -1,9 +1,7 @@
 package com.example.ktpetbackend.user.service;
 
-import com.example.ktpetbackend.user.dto.LoginDto;
-import com.example.ktpetbackend.user.dto.SignUpDto;
-import com.example.ktpetbackend.user.dto.UserInfo;
-import com.example.ktpetbackend.user.dto.UserInfoWithToken;
+import com.example.ktpetbackend.global.exception.BadRequestException;
+import com.example.ktpetbackend.user.dto.*;
 import com.example.ktpetbackend.user.entity.RefreshToken;
 import com.example.ktpetbackend.user.entity.User;
 import com.example.ktpetbackend.global.exception.NotFoundException;
@@ -65,6 +63,7 @@ public class UserService {
                 .name(signUpDto.getName())
                 .userRole("ROLE_USER")
                 .email(signUpDto.getEmail())
+                .deleted(0)
                 .build();
 
         userRepository.save(user);
@@ -96,7 +95,7 @@ public class UserService {
                 .orElseThrow(() -> new NotFoundException("사용자를 찾을 수 없습니다."));
 
         if (!passwordEncoder.matches(loginDto.getPassword(), user.getPassword())) {
-            throw new NotFoundException("비밀번호가 일치하지 않습니다.");
+            throw new BadRequestException("비밀번호가 일치하지 않습니다.");
         }
 
         // JWT 토큰 생성
@@ -130,5 +129,34 @@ public class UserService {
                 .build();
 
         return userInfo;
+    }
+
+    public UserInfo modifyInfo(String username, UserModifyDto userModifyDto) {
+
+        User user = userRepository.findByUsername(username).get();
+
+
+        if (userModifyDto.getNewPassword() != null) {
+            user.setPassword(passwordEncoder.encode(userModifyDto.getNewPassword()));
+        }
+        if (userModifyDto.getEmail() != null) {
+            user.setEmail(userModifyDto.getEmail());
+        }
+
+        UserInfo userInfo = UserInfo.builder()
+                .username(user.getUsername())
+                .id(user.getId())
+                .email(user.getEmail())
+                .build();
+
+        return userInfo;
+    }
+
+    public void withdraw(String username) {
+        User user = userRepository.findByUsername(username).get();
+
+        user.setDeleted(1);
+
+        userRepository.save(user);
     }
 }

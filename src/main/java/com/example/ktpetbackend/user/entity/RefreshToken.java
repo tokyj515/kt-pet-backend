@@ -1,6 +1,7 @@
 package com.example.ktpetbackend.user.entity;
 
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.Where;
 
@@ -14,8 +15,8 @@ import jakarta.persistence.*;
 @Setter
 @Entity
 @Table(name = "refresh_token")
-@Where(clause = "delete_yn = 0")
-public class RefreshToken extends BaseTimeEntity {
+//@Where(clause = "delete_yn = 0")
+public class RefreshToken extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

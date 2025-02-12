@@ -1,6 +1,7 @@
 package com.example.ktpetbackend.user.entity;
 
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.DynamicInsert;
 
 import jakarta.persistence.*;
@@ -14,7 +15,7 @@ import jakarta.persistence.*;
 @Entity
 @Table(name = "`user`")
 //@Where(clause = "delete_yn = 0")
-public class User extends BaseTimeEntity {
+public class User extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,4 +32,5 @@ public class User extends BaseTimeEntity {
     @Column(name = "user_role")
     private String userRole;
 
+    private Integer deleted;
 }
