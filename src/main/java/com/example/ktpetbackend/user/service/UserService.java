@@ -131,10 +131,10 @@ public class UserService {
         return userInfo;
     }
 
+    @Transactional
     public UserInfo modifyInfo(String username, UserModifyDto userModifyDto) {
-
-        User user = userRepository.findByUsername(username).get();
-
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
 
         if (userModifyDto.getNewPassword() != null) {
             user.setPassword(passwordEncoder.encode(userModifyDto.getNewPassword()));
@@ -143,14 +143,15 @@ public class UserService {
             user.setEmail(userModifyDto.getEmail());
         }
 
-        UserInfo userInfo = UserInfo.builder()
+        userRepository.save(user);
+
+        return UserInfo.builder()
                 .username(user.getUsername())
                 .id(user.getId())
                 .email(user.getEmail())
                 .build();
-
-        return userInfo;
     }
+
 
     public void withdraw(String username) {
         User user = userRepository.findByUsername(username).get();

@@ -66,7 +66,7 @@ public class UserController {
 
     @Operation(summary = "회원정보 수정 API => 비밀번호, 이메일 수정")
     @PatchMapping("/modify")
-    public ApiResponse<UserInfo> modifyInfo(@AuthenticationPrincipal UserDetailsImpl userDetails, UserModifyDto userModifyDto){
+    public ApiResponse<UserInfo> modifyInfo(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestBody UserModifyDto userModifyDto){
         return new ApiResponse<>(userService.modifyInfo(userDetails.getUsername(), userModifyDto));
     }
 
