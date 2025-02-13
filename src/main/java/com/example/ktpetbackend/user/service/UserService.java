@@ -125,6 +125,7 @@ public class UserService {
         UserInfo userInfo = UserInfo.builder()
                 .username(user.getUsername())
                 .id(user.getId())
+                .name(user.getName())
                 .email(user.getEmail())
                 .build();
 
@@ -149,6 +150,7 @@ public class UserService {
                 .username(user.getUsername())
                 .id(user.getId())
                 .email(user.getEmail())
+                .name(user.getName())
                 .build();
     }
 

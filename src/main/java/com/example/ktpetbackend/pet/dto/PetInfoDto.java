@@ -8,6 +8,7 @@ import lombok.*;
 @Getter
 @Setter
 public class PetInfoDto {
+    private Long petId;
 
     private String name;
 
@@ -16,4 +17,6 @@ public class PetInfoDto {
     private Long age;
 
     private String url;
+
+    private Integer deleted;
 }

@@ -33,6 +33,8 @@ public class Pet {
     @JoinColumn(name = "user_id")
     private User user;
 
+    private Integer deleted;
+
 }
 
 
