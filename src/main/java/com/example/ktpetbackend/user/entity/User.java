@@ -32,5 +32,7 @@ public class User extends BaseEntity {
     @Column(name = "user_role")
     private String userRole;
 
+    private String phone;
+
     private Integer deleted;
 }

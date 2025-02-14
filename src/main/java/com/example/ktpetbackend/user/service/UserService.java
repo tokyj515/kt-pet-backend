@@ -63,6 +63,7 @@ public class UserService {
                 .name(signUpDto.getName())
                 .userRole("ROLE_USER")
                 .email(signUpDto.getEmail())
+                .phone(signUpDto.getPhone())
                 .deleted(0)
                 .build();
 
@@ -127,6 +128,7 @@ public class UserService {
                 .id(user.getId())
                 .name(user.getName())
                 .email(user.getEmail())
+                .phone(user.getPhone())
                 .build();
 
         return userInfo;
@@ -151,6 +153,7 @@ public class UserService {
                 .id(user.getId())
                 .email(user.getEmail())
                 .name(user.getName())
+                .phone(user.getPhone())
                 .build();
     }
 
