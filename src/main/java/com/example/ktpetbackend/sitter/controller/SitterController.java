@@ -1,6 +1,7 @@
 package com.example.ktpetbackend.sitter.controller;
 
 
+import com.example.ktpetbackend.sitter.dto.SitterInfoDto;
 import com.example.ktpetbackend.sitter.dto.SitterRegisterDto;
 import com.example.ktpetbackend.sitter.repository.SitterRepository;
 import com.example.ktpetbackend.sitter.service.SitterService;
@@ -10,10 +11,7 @@ import com.example.ktpetbackend.user.entity.UserDetailsImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -32,8 +30,10 @@ public class SitterController {
         return new ApiResponse<>("시터 등록에 성공하였습니다.");
     }
 
-
-
-    //펫시터 제공 가능 서비스 리스트
+    @Operation(summary = "펫시터 프로필 API")
+    @GetMapping("/profile")
+    public ApiResponse<SitterInfoDto> getSitterProfile(@AuthenticationPrincipal UserDetailsImpl userDetails){
+        return new ApiResponse<>(sitterService.getSitterProfile(userDetails.getUsername()));
+    }
 
 }
