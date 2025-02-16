@@ -11,4 +11,6 @@ import java.util.List;
 public interface SitterCarePetRepository extends JpaRepository<SitterCarePet, Long> {
 
     List<SitterCarePet> findBySitter(Sitter sitter);
+
+    void deleteBySitter(Sitter sitter);
 }

@@ -2,6 +2,7 @@ package com.example.ktpetbackend.sitter.controller;
 
 
 import com.example.ktpetbackend.sitter.dto.SitterInfoDto;
+import com.example.ktpetbackend.sitter.dto.SitterModifyDto;
 import com.example.ktpetbackend.sitter.dto.SitterRegisterDto;
 import com.example.ktpetbackend.sitter.repository.SitterRepository;
 import com.example.ktpetbackend.sitter.service.SitterService;
@@ -44,11 +45,18 @@ public class SitterController {
         return new ApiResponse<>(sitterService.getSitterProfileById(sitterId));
     }
 
-    @Operation(summary = "펫시터 프로필 상세 보기 API")
+    @Operation(summary = "펫시터 프로필 리스트 API")
     @GetMapping("/profile/list")
     public ApiResponse<List<SitterInfoDto>> getSitterList(){
         return new ApiResponse<>(sitterService.getSitterList());
     }
 
+
+    @Operation(summary = "나의 펫시터 프로필 수정 API")
+    @PatchMapping("/profile")
+    public ApiResponse<SitterInfoDto> modifyMySitterProfile(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                                       @RequestBody SitterModifyDto sitterModifyDto){
+        return new ApiResponse<>(sitterService.modifyMySitterProfile(userDetails.getUsername(), sitterModifyDto));
+    }
 
 }
