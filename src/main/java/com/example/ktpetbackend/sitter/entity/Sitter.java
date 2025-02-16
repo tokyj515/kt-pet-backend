@@ -31,4 +31,6 @@ public class Sitter {
 
     private String charge;
 
+    private Integer deleted;
+
 }

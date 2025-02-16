@@ -13,6 +13,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/sitter")
@@ -30,10 +32,23 @@ public class SitterController {
         return new ApiResponse<>("시터 등록에 성공하였습니다.");
     }
 
-    @Operation(summary = "펫시터 프로필 API")
+    @Operation(summary = "펫시터 프로필 (내가 펫시터인 경우에 사용)API")
     @GetMapping("/profile")
     public ApiResponse<SitterInfoDto> getSitterProfile(@AuthenticationPrincipal UserDetailsImpl userDetails){
         return new ApiResponse<>(sitterService.getSitterProfile(userDetails.getUsername()));
     }
+
+    @Operation(summary = "펫시터 프로필 상세 보기 API")
+    @GetMapping("/profile/{sitterId}")
+    public ApiResponse<SitterInfoDto> getSitterProfile(@PathVariable Long sitterId){
+        return new ApiResponse<>(sitterService.getSitterProfileById(sitterId));
+    }
+
+    @Operation(summary = "펫시터 프로필 상세 보기 API")
+    @GetMapping("/profile/list")
+    public ApiResponse<List<SitterInfoDto>> getSitterList(){
+        return new ApiResponse<>(sitterService.getSitterList());
+    }
+
 
 }

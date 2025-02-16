@@ -11,7 +11,7 @@ import java.util.List;
 @Setter
 public class SitterInfoDto {
 
-    private Long id;
+    private Long sitterId;
 
     private String name;
 

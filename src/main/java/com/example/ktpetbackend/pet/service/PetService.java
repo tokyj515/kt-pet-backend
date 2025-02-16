@@ -77,6 +77,7 @@ public class PetService {
         Pet pet = petRepository.findById(petId).get();
 
         PetInfoDto e = PetInfoDto.builder()
+                .petId(pet.getId())
                 .name(pet.getName())
                 .petType(pet.getPetType())
                 .age(pet.getAge())

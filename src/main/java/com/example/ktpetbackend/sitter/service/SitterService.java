@@ -17,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -84,6 +85,7 @@ public class SitterService {
 
 
         SitterInfoDto sitterInfoDto = SitterInfoDto.builder()
+                .sitterId(sitter.getId())
                 .name(user.getName())
                 .email(user.getEmail())
                 .charge(sitter.getCharge())
@@ -93,5 +95,77 @@ public class SitterService {
                 .build();
 
         return sitterInfoDto;
+    }
+
+    public SitterInfoDto getSitterProfileById(Long sitterId) {
+        Sitter sitter = sitterRepository.findById(sitterId).orElseThrow(() -> new BadRequestException("시터가 존재하지 않습니다."));
+
+
+        List<SitterCarePetDto> sitterCarePetDtos = sitterCarePetRepository.findBySitter(sitter)
+                .stream()
+                .map(sitterCarePet -> SitterCarePetDto.builder()
+                        .petType(sitterCarePet.getPetType())
+                        .build())
+                .collect(Collectors.toList());
+
+        List<SitterCareTimeDto> sitterCareTimeDtos = sitterCareTimeRepository.findBySitter(sitter)
+                .stream()
+                .map(sitterCareTime -> SitterCareTimeDto.builder()
+                        .day(sitterCareTime.getDay())
+                        .startTime(sitterCareTime.getStartTime())
+                        .endTime(sitterCareTime.getEndTime())
+                        .build())
+                .collect(Collectors.toList());
+
+
+        SitterInfoDto sitterInfoDto = SitterInfoDto.builder()
+                .sitterId(sitter.getId())
+                .name(sitter.getUser().getName())
+                .email(sitter.getUser().getEmail())
+                .charge(sitter.getCharge())
+                .location(sitter.getLocation())
+                .carePetList(sitterCarePetDtos)
+                .careTimeList(sitterCareTimeDtos)
+                .build();
+
+        return sitterInfoDto;
+    }
+
+    public List<SitterInfoDto> getSitterList() {
+        List<Sitter> sitters = sitterRepository.findAll();
+
+        List<SitterInfoDto> result = new ArrayList<>();
+
+        for(Sitter sitter : sitters) {
+            List<SitterCarePetDto> sitterCarePetDtos = sitterCarePetRepository.findBySitter(sitter)
+                    .stream()
+                    .map(sitterCarePet -> SitterCarePetDto.builder()
+                            .petType(sitterCarePet.getPetType())
+                            .build())
+                    .collect(Collectors.toList());
+
+            List<SitterCareTimeDto> sitterCareTimeDtos = sitterCareTimeRepository.findBySitter(sitter)
+                    .stream()
+                    .map(sitterCareTime -> SitterCareTimeDto.builder()
+                            .day(sitterCareTime.getDay())
+                            .startTime(sitterCareTime.getStartTime())
+                            .endTime(sitterCareTime.getEndTime())
+                            .build())
+                    .collect(Collectors.toList());
+
+            SitterInfoDto sitterInfoDto = SitterInfoDto.builder()
+                    .sitterId(sitter.getId())
+                    .name(sitter.getUser().getName())
+                    .email(sitter.getUser().getEmail())
+                    .charge(sitter.getCharge())
+                    .location(sitter.getLocation())
+                    .carePetList(sitterCarePetDtos)
+                    .careTimeList(sitterCareTimeDtos)
+                    .build();
+
+            result.add(sitterInfoDto);
+        }
+
+        return result;
     }
 }
