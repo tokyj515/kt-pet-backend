@@ -1,6 +1,8 @@
 package com.example.ktpetbackend.user.controller;
 
 
+import com.example.ktpetbackend.sitter.repository.SitterRepository;
+import com.example.ktpetbackend.sitter.service.SitterService;
 import com.example.ktpetbackend.user.dto.*;
 import com.example.ktpetbackend.user.entity.ApiResponse;
 import com.example.ktpetbackend.global.security.SecurityUtil;
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     private final UserService userService;
+    private final SitterRepository sitterRepository;
 
 
 //    @GetMapping
@@ -78,7 +81,12 @@ public class UserController {
     }
 
 
-
+    @Operation(summary = "현재 로그인한 사용자의 역할 조회 API")
+    @GetMapping("/role")
+    public ApiResponse<String> getUserRole(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        boolean isSitter = sitterRepository.existsByUserUsername(userDetails.getUsername());
+        return new ApiResponse<>(isSitter ? "SITTER" : "USER");
+    }
 
 //    @GetMapping("/now/admin")
 //    public ApiResponse<String> nowAdmin(){

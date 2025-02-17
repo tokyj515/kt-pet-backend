@@ -12,4 +12,6 @@ public interface SitterRepository extends JpaRepository<Sitter, Long> {
     Optional<Sitter> findByUser(User user);
 
     boolean existsByUser(User user);
+
+    boolean existsByUserUsername(String username);
 }

@@ -1,6 +1,7 @@
 package com.example.ktpetbackend.reservation.service;
 
 import com.example.ktpetbackend.global.exception.BadRequestException;
+import com.example.ktpetbackend.pet.dto.PetInfoDto;
 import com.example.ktpetbackend.pet.entity.Pet;
 import com.example.ktpetbackend.pet.repository.PetRepository;
 import com.example.ktpetbackend.reservation.dto.ReservationDto;
@@ -10,8 +11,10 @@ import com.example.ktpetbackend.reservation.entity.ReservationCareTime;
 import com.example.ktpetbackend.reservation.repository.ReservationCareTimeRepository;
 import com.example.ktpetbackend.reservation.repository.ReservationRepository;
 import com.example.ktpetbackend.sitter.dto.SitterCareTimeDto;
+import com.example.ktpetbackend.sitter.dto.SitterInfoDto;
 import com.example.ktpetbackend.sitter.entity.Sitter;
 import com.example.ktpetbackend.sitter.repository.SitterRepository;
+import com.example.ktpetbackend.user.dto.UserInfo;
 import com.example.ktpetbackend.user.entity.User;
 import com.example.ktpetbackend.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -56,6 +60,7 @@ public class ReservationService {
                 .sitter(sitter) // 펫시터 정보
                 .pet(pet) // 예약할 펫 정보
                 .totalCharge(reservationRegisterDto.getTotalCharge()) // 총 요금
+                .confirm(0)
                 .build();
 
         // ✅ 6. 예약 저장
@@ -152,23 +157,34 @@ public class ReservationService {
      * ✅ 예약 엔티티 → DTO 변환
      */
     private ReservationDto convertToReservationDto(Reservation reservation) {
-        List<ReservationCareTime> reservationCareTimes = reservationCareTimeRepository.findByReservation(reservation);
-
-        List<SitterCareTimeDto> sitterCareTimeDtos = new ArrayList<>();
-        for (ReservationCareTime sitterCareTime : reservationCareTimes) {
-            sitterCareTimeDtos.add(SitterCareTimeDto.builder()
-                    .day(sitterCareTime.getDay())
-                    .startTime(sitterCareTime.getStartTime())
-                    .endTime(sitterCareTime.getEndTime())
-                    .build());
-        }
+        // ✅ reservationId로 careTimes 조회
+        List<SitterCareTimeDto> sitterCareTimeDtos = reservationCareTimeRepository.findByReservation(reservation)
+                .stream()
+                .map(time -> new SitterCareTimeDto(time.getDay(), time.getStartTime(), time.getEndTime()))
+                .collect(Collectors.toList());
 
         return ReservationDto.builder()
-                .pet(reservation.getPet())
-                .sitter(reservation.getSitter())
-                .confirm(reservation.getConfirm())
+                .reservationId(reservation.getId())
+                .pet(PetInfoDto.builder()
+                        .petId(reservation.getPet().getId())
+                        .name(reservation.getPet().getName())
+                        .petType(reservation.getPet().getPetType())
+                        .age(reservation.getPet().getAge())
+                        .build()) // ✅ user 정보 제거
+                .sitter(SitterInfoDto.builder()
+                        .sitterId(reservation.getSitter().getId())
+                        .name(reservation.getSitter().getUser().getName()) // ✅ sitter의 user 정보는 유지
+                        .email(reservation.getSitter().getUser().getEmail())
+                        .phone(reservation.getSitter().getUser().getPhone())
+                        .build())
+                .user(UserInfo.builder()
+                        .name(reservation.getUser().getUsername())
+                        .email(reservation.getUser().getEmail())
+                        .phone(reservation.getUser().getPhone())
+                        .build())
                 .totalCharge(reservation.getTotalCharge())
-                .sitterCareTimeDtos(sitterCareTimeDtos)
+                .confirm(reservation.getConfirm())
+                .sitterCareTimeDtos(sitterCareTimeDtos) // ✅ 변경된 부분
                 .build();
     }
 }

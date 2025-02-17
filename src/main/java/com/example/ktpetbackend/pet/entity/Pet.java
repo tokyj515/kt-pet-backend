@@ -1,6 +1,7 @@
 package com.example.ktpetbackend.pet.entity;
 
 import com.example.ktpetbackend.user.entity.User;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
@@ -29,6 +30,7 @@ public class Pet {
 
     private String url;
 
+    @JsonIgnore // ✅ Hibernate 프록시 문제 해결
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
