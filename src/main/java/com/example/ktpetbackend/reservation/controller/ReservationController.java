@@ -61,4 +61,13 @@ public class ReservationController {
         return new ApiResponse<>("펫시터 예약이 확정되었습니다.");
     }
 
+    @Operation(summary = "사용자가 예약 삭제 또는 승인 거부 API")
+    @PatchMapping("/cancel/{reservationId}")
+    public ApiResponse<String> cancelReservation (@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                                   @PathVariable Long reservationId) {
+        reservationService.cancelReservation(userDetails.getUsername(), reservationId);
+        return new ApiResponse<>("펫시터 예약이 취소되었습니다.");
+    }
+
+
 }

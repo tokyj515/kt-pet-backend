@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -84,7 +85,7 @@ public class ReservationService {
     }
 
     /**
-     * ✅ 사용자의 예약 목록 조회
+     * ✅ 사용자의 예약 목록 조회 (0: 승인 대기, 1: 승인 완료)
      */
     @Transactional(readOnly = true)
     public List<ReservationDto> selectReservationUserList(String username) {
@@ -92,13 +93,14 @@ public class ReservationService {
                 .orElseThrow(() -> new IllegalArgumentException("해당 사용자를 찾을 수 없습니다."));
 
         List<ReservationDto> result = new ArrayList<>();
-        List<Reservation> reservations = reservationRepository.findByUser(user);
+        List<Reservation> reservations = reservationRepository.findByUserAndConfirmIn(user, Arrays.asList(0, 1));
 
         for (Reservation reservation : reservations) {
             result.add(convertToReservationDto(reservation));
         }
         return result;
     }
+
 
     /**
      * ✅ 펫시터의 예약 목록 조회
@@ -186,5 +188,13 @@ public class ReservationService {
                 .confirm(reservation.getConfirm())
                 .sitterCareTimeDtos(sitterCareTimeDtos) // ✅ 변경된 부분
                 .build();
+    }
+
+    public void cancelReservation(String username, Long reservationId) {
+        Reservation reservation = reservationRepository.findById(reservationId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 예약을 찾을 수 없습니다."));
+
+        reservation.setConfirm(2); // 예약 승인 (0: 대기, 1: 승인, 2: 삭제)
+        reservationRepository.save(reservation);
     }
 }

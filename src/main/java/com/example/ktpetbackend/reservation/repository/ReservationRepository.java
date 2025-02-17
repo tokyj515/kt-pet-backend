@@ -10,6 +10,10 @@ import java.util.Optional;
 
 public interface ReservationRepository extends JpaRepository<Reservation, Integer> {
     List<Reservation> findByUser(User user);
+    List<Reservation> findByUserAndConfirm(User user, Integer confirm);
+
+    List<Reservation> findByUserAndConfirmIn(User user, List<Integer> confirmValues);
+
 
     List<Reservation> findBySitter(Sitter sitter);
 
