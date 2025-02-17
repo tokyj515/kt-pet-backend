@@ -32,6 +32,10 @@ public class SitterService {
     public void registerSitter(String username, SitterRegisterDto sitterRegisterDto) {
         User user = userRepository.findByUsername(username).get();
 
+        if(sitterRepository.existsByUser(user)) {
+            throw new BadRequestException("이미 펫시터로 등록된 사용자입니다.");
+        }
+
         Sitter sitter = Sitter.builder()
                 .user(user)
                 .location(sitterRegisterDto.getLocation())
