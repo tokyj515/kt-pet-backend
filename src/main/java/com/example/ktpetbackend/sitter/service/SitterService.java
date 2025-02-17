@@ -32,6 +32,9 @@ public class SitterService {
     public void registerSitter(String username, SitterRegisterDto sitterRegisterDto) {
         User user = userRepository.findByUsername(username).get();
 
+        user.setUserRole("ROLE_ADMIN");
+        userRepository.save(user);
+
         if(sitterRepository.existsByUser(user)) {
             throw new BadRequestException("이미 펫시터로 등록된 사용자입니다.");
         }
